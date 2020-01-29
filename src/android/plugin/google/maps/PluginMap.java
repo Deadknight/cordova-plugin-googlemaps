@@ -1815,9 +1815,10 @@ public class PluginMap extends MyPlugin implements OnMarkerClickListener,
         if(!myLoc)
         {
             map.setMyLocationEnabled(myLoc);
+            boolean myLocBut = false;
             if (params.has("myLocationButton")) 
             {
-                boolean myLocBut = params.getBoolean("myLocationButton");
+                myLocBut = params.getBoolean("myLocationButton");
                 map.getUiSettings().setMyLocationButtonEnabled(myLocBut);
             }
             if (!myLoc && myLocBut) {
