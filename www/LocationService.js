@@ -8,15 +8,8 @@ var LocationService = function(exec) {
     console.error(err);
   }
   return {
-    hasPermission: function(params, callback, errorCallback) {
+    hasPermission: function(callback, errorCallback) {
       var self = this;
-      var args = [params || {}, success_callback || null, errorCallback];
-      if (typeof args[0] === 'function') {
-        args.unshift({});
-      }
-      params = args[0];
-      success_callback = args[1];
-      errorCallback = args[2];
 
       var resolver = function(resolve, reject) {
         exec.call({
@@ -25,7 +18,7 @@ var LocationService = function(exec) {
         function(hasPermission) {
           resolve.call(self, hasPermission === 1);
         },
-        reject.bind(self), 'PluginLocationService', 'hasPermission', [params], {sync: true});
+        reject.bind(self), 'PluginLocationService', 'hasPermission', [], {sync: true});
       };
 
       var errorHandler = function(result) {
