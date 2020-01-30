@@ -88,11 +88,32 @@ public class PluginLocationService extends CordovaPlugin {
 
   @SuppressWarnings("unused")
   public void hasPermission(final JSONArray args, final CallbackContext callbackContext) throws JSONException {
-    synchronized (semaphore) {
-      // Check geolocation permission.
-      boolean locationPermission = PermissionChecker.checkSelfPermission(cordova.getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED;
-      callbackContext.success(locationPermission ? 1 : 0);
-    }
+      boolean waitLock = false;
+      if(args != null)
+      {
+          if(args.length() > 0) {
+              JSONObject params = args.getJSONObject(0);
+              if (params != null && params.has("waitLock")) {
+                  waitLock = params.getBoolean("waitLock");
+              }
+          }
+      }
+      if(waitLock) {
+          synchronized (semaphore) {
+              // Check geolocation permission.
+              boolean locationPermission = PermissionChecker.checkSelfPermission(
+                  cordova.getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                  == PermissionChecker.PERMISSION_GRANTED;
+              callbackContext.success(locationPermission ? 1 : 0);
+          }
+      }
+      else
+      {
+          boolean locationPermission = PermissionChecker.checkSelfPermission(
+              cordova.getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+              == PermissionChecker.PERMISSION_GRANTED;
+          callbackContext.success(locationPermission ? 1 : 0);
+      }
   }
 
 
