@@ -1814,19 +1814,28 @@ public class PluginMap extends MyPlugin implements OnMarkerClickListener,
         boolean myLoc = params.getBoolean("myLocation");
         if(!myLoc)
         {
-            map.setMyLocationEnabled(myLoc);
-            boolean myLocBut = false;
-            if (params.has("myLocationButton")) 
-            {
-                myLocBut = params.getBoolean("myLocationButton");
-                map.getUiSettings().setMyLocationButtonEnabled(myLocBut);
-            }
-            if (!myLoc && myLocBut) {
-                dummyMyLocationButton.setVisibility(View.VISIBLE);
-            } else {
-                dummyMyLocationButton.setVisibility(View.GONE);
-            }
-            callbackContext.success();
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    map.setMyLocationEnabled(myLoc);
+                    boolean myLocBut = false;
+                    if (params.has("myLocationButton"))
+                    {
+                        try {
+                            myLocBut = params.getBoolean("myLocationButton");
+                        } catch (JSONException e) {
+
+                        }
+                        map.getUiSettings().setMyLocationButtonEnabled(myLocBut);
+                    }
+                    if (!myLoc && myLocBut) {
+                        dummyMyLocationButton.setVisibility(View.VISIBLE);
+                    } else {
+                        dummyMyLocationButton.setVisibility(View.GONE);
+                    }
+                    callbackContext.success();
+                }
+            });
             return;
         }
     }
