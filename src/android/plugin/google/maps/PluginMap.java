@@ -426,7 +426,7 @@ public class PluginMap extends MyPlugin implements OnMarkerClickListener,
               map.setOnInfoWindowClickListener(PluginMap.this);
               map.setOnInfoWindowLongClickListener(PluginMap.this);
               map.setOnInfoWindowCloseListener(PluginMap.this);
-              map.setOnMyLocationClickListener(PluginMap.this);
+              //map.setOnMyLocationClickListener(PluginMap.this);
               map.setOnPoiClickListener(PluginMap.this);
 
               //Custom info window
@@ -1831,6 +1831,37 @@ public class PluginMap extends MyPlugin implements OnMarkerClickListener,
   public void setMyLocationEnabled(final JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
     final JSONObject params = args.getJSONObject(0);
+      
+    if (params.has("myLocation")) {
+        //Log.d(TAG, "--->myLocation = " + params.getBoolean("myLocation"));
+        boolean myLoc = params.getBoolean("myLocation");
+        if(!myLoc)
+        {
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    map.setMyLocationEnabled(myLoc);
+                    boolean myLocBut = false;
+                    if (params.has("myLocationButton"))
+                    {
+                        try {
+                            myLocBut = params.getBoolean("myLocationButton");
+                        } catch (JSONException e) {
+
+                        }
+                        map.getUiSettings().setMyLocationButtonEnabled(myLocBut);
+                    }
+                    if (!myLoc && myLocBut) {
+                        dummyMyLocationButton.setVisibility(View.VISIBLE);
+                    } else {
+                        dummyMyLocationButton.setVisibility(View.GONE);
+                    }
+                    callbackContext.success();
+                }
+            });
+            return;
+        }
+    }
 
     boolean locationPermission = PermissionChecker.checkSelfPermission(cordova.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED;
     //Log.d(TAG, "---> setMyLocationEnabled, hasPermission =  " + locationPermission);

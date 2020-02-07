@@ -38,7 +38,7 @@
 }
 
 #pragma mark - GMSMapViewDelegate
-- (void)mapView:(GMSMapView *)mapView didTapMyLocation:(CLLocationCoordinate2D)location {
+/*- (void)mapView:(GMSMapView *)mapView didTapMyLocation:(CLLocationCoordinate2D)location {
 
     NSMutableDictionary *latLng = [NSMutableDictionary dictionary];
     [latLng setObject:[NSNumber numberWithDouble:location.latitude] forKey:@"lat"];
@@ -62,7 +62,7 @@
                           stringWithFormat:@"javascript:if('%@' in plugin.google.maps){plugin.google.maps['%@']({evtName: '%@', callback: '_onMapEvent', args: [%@]});}",
                           self.overlayId, self.overlayId, @"my_location_click", sourceArrayString];
     [self execJS:jsString];
-}
+}*/
 
 /**
  * @callback the my location button is clicked.
